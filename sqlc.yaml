@@ -1,0 +1,22 @@
+version: "2"
+sql:
+  - engine: "postgresql"
+    # Path to the directory containing our schema migration files.
+    schema: "db/migration"
+    # Path to the directory where our raw SQL queries will live.
+    queries: "db/query"
+    gen:
+      go:
+        # The package name for the generated code.
+        package: "db"
+        # The output directory for the generated Go files.
+        # We'll place it in internal/database/db to keep it private to our app.
+        out: "internal/database/db"
+        # These options ensure the generated structs have JSON tags, which is
+        # extremely useful for building APIs. It also uses pointers for nullable
+        # columns, which is a Go best practice.
+        emit_json_tags: true
+        emit_prepared_queries: false
+        emit_interface: true
+        emit_exact_table_names: false
+        emit_empty_slices: true
