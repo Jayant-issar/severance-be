@@ -10,7 +10,7 @@ import (
 
 	"github.com/Jayant-issar/severance-backend/internal/config"
 	"github.com/Jayant-issar/severance-backend/internal/database/db"
-	"github.com/Jayant-issar/severance-backend/internal/handler"
+	"github.com/Jayant-issar/severance-backend/internal/router"
 )
 
 func main() {
@@ -37,7 +37,7 @@ func main() {
 	store := db.NewStore(conn)
 
 	//new server instance
-	server := handler.NewServer(store)
+	server := router.NewServer(store)
 
 	//start http request and listen for incoming requests.
 	log.Printf("Server starting on %s", cfg.ServerAddress)

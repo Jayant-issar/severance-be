@@ -18,6 +18,7 @@ type createUserRequest struct {
 
 // userResponse defines sthe structure of the user data that is sent back.
 type userResponse struct {
+	ID        string    `json:"id"`
 	Username  string    `json:"username"`
 	Email     string    `json:"email"`
 	CreatedAt time.Time `json:"created_at"`
@@ -34,9 +35,9 @@ func newUserResponse(user db.User) userResponse {
 	}
 }
 
-// CreateUser is used for POST /user
-// its a server struct and from there we are getting the acess database connections
-func (s *Server) CreateUser(ctx *gin.Context) {
+// CreateUser is used for POST /users
+// it accesses the database through the handler's store
+func (h *Handler) CreateUser(ctx *gin.Context) {
 	var req createUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		util.HandleValidationError(ctx, err)
@@ -57,7 +58,7 @@ func (s *Server) CreateUser(ctx *gin.Context) {
 		PasswordHash: hashedPassword,
 	}
 
-	user, err := s.store.CreateUser(ctx, params)
+	user, err := h.store.CreateUser(ctx, params)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create user"})
 		return
@@ -67,7 +68,51 @@ func (s *Server) CreateUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, rsp)
 }
 
-// healthCheck is a simple handler to check if the server is running.
-func (s *Server) healthCheck(ctx *gin.Context) {
+// GetUser handles GET /users/:id
+func (h *Handler) GetUser(ctx *gin.Context) {
+	id := ctx.Param("id")
+	user, err := h.store.GetUserByID(ctx, id)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
+		return
+	}
+
+	rsp := newUserResponse(user)
+	ctx.JSON(http.StatusOK, rsp)
+}
+
+// ListUsers handles GET /users
+func (h *Handler) ListUsers(ctx *gin.Context) {
+	users, err := h.store.ListUsers(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "failed to list users"})
+		return
+	}
+
+	var rsp []userResponse
+	for _, u := range users {
+		rsp = append(rsp, newUserResponse(u))
+	}
+	ctx.JSON(http.StatusOK, users)
+}
+
+// UpdateUser handles PUT /users/:id
+func (h *Handler) UpdateUser(ctx *gin.Context) {
+	ctx.JSON(http.StatusNotImplemented, gin.H{"message": "update user not implemented"})
+}
+
+// DeleteUser handles DELETE /users/:id
+func (h *Handler) DeleteUser(ctx *gin.Context) {
+	id := ctx.Param("id")
+	err := h.store.DeleteUser(ctx, id)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "failed to delete user"})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"message": "user deleted"})
+}
+
+// HealthCheck is a simple handler to check if the server is running.
+func (h *Handler) HealthCheck(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"status": "UP"})
 }
