@@ -1,6 +1,7 @@
 package router
 
 import (
+	"github.com/Jayant-issar/severance-backend/internal/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,6 +14,11 @@ func (s *Server) setupRoutes(router *gin.Engine) {
 	v1 := router.Group("/api/v1")
 	{
 		// Set up user routes
-		userRouter(v1.Group("/users"), &s.handler)
+		userGroup := v1.Group("/users")
+		userGroup.Use(middleware.AuthMiddleware())
+		userRouter(userGroup, &s.handler)
+
+		//set up auth routes
+		authRouter(v1.Group("/auth"), &s.handler)
 	}
 }

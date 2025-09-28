@@ -31,7 +31,6 @@ dropdb:
 # ====================================================================================
 # MIGRATIONS
 # ====================================================================================
-# We'll create the db/migration folder in the next step.
 migrateup:
 	migrate -path db/migration -database "$(DB_URL)" -verbose up
 
