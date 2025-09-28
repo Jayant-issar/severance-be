@@ -3,6 +3,7 @@ package router
 import (
 	"github.com/Jayant-issar/severance-backend/internal/database/db"
 	"github.com/Jayant-issar/severance-backend/internal/handler"
+	"github.com/Jayant-issar/severance-backend/internal/service"
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,8 +24,10 @@ func NewServer(store db.Store) *Server {
 	//Register all the routes here
 	server.setupRoutes(router)
 
+	//new service
+	service := service.NewService(store)
 	//register new route handler
-	server.handler = *handler.NewGlobalHandler(store)
+	server.handler = *handler.NewGlobalHandler(service)
 
 	server.router = router
 	return server

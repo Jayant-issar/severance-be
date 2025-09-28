@@ -58,7 +58,7 @@ func (h *Handler) CreateUser(ctx *gin.Context) {
 		PasswordHash: hashedPassword,
 	}
 
-	user, err := h.store.CreateUser(ctx, params)
+	user, err := h.service.User.CreateUser(ctx, params)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create user"})
 		return
@@ -71,7 +71,7 @@ func (h *Handler) CreateUser(ctx *gin.Context) {
 // GetUser handles GET /users/:id
 func (h *Handler) GetUser(ctx *gin.Context) {
 	id := ctx.Param("id")
-	user, err := h.store.GetUserByID(ctx, id)
+	user, err := h.service.User.GetUserByID(ctx, id)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
 		return
@@ -83,7 +83,7 @@ func (h *Handler) GetUser(ctx *gin.Context) {
 
 // ListUsers handles GET /users
 func (h *Handler) ListUsers(ctx *gin.Context) {
-	users, err := h.store.ListUsers(ctx)
+	users, err := h.service.User.ListUsers(ctx)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "failed to list users"})
 		return
@@ -104,7 +104,7 @@ func (h *Handler) UpdateUser(ctx *gin.Context) {
 // DeleteUser handles DELETE /users/:id
 func (h *Handler) DeleteUser(ctx *gin.Context) {
 	id := ctx.Param("id")
-	err := h.store.DeleteUser(ctx, id)
+	err := h.service.User.DeleteUser(ctx, id)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "failed to delete user"})
 		return
