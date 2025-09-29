@@ -9,13 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// createUserRequest defines the structure of the body for creating a user.
-type createUserRequest struct {
-	Username string `json:"username" binding:"required,alphanum"`
-	Email    string `json:"email" binding:"required,email"`
-	Password string `json:"password" binding:"required,min=6"`
-}
-
 // userResponse defines sthe structure of the user data that is sent back.
 type userResponse struct {
 	ID        string    `json:"id"`
