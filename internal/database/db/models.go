@@ -18,7 +18,22 @@ type AiReview struct {
 	CreatedAt   sql.NullTime   `json:"created_at"`
 }
 
-type Assignment struct {
+type Discussion struct {
+	ID         string       `json:"id"`
+	QuestionID string       `json:"question_id"`
+	UserID     string       `json:"user_id"`
+	Content    string       `json:"content"`
+	CreatedAt  sql.NullTime `json:"created_at"`
+}
+
+type Editorial struct {
+	ID         string       `json:"id"`
+	QuestionID string       `json:"question_id"`
+	Content    string       `json:"content"`
+	CreatedAt  sql.NullTime `json:"created_at"`
+}
+
+type Question struct {
 	ID          string `json:"id"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
@@ -26,14 +41,31 @@ type Assignment struct {
 	Difficulty string         `json:"difficulty"`
 	Tags       sql.NullString `json:"tags"`
 	CreatedAt  sql.NullTime   `json:"created_at"`
+	UpdatedAt  sql.NullTime   `json:"updated_at"`
+}
+
+type QuestionSection struct {
+	ID         string        `json:"id"`
+	QuestionID string        `json:"question_id"`
+	Title      string        `json:"title"`
+	Content    string        `json:"content"`
+	Order      sql.NullInt32 `json:"order"`
+}
+
+type Solution struct {
+	ID         string       `json:"id"`
+	QuestionID string       `json:"question_id"`
+	UserID     string       `json:"user_id"`
+	Content    string       `json:"content"`
+	CreatedAt  sql.NullTime `json:"created_at"`
 }
 
 type Submission struct {
-	ID           string `json:"id"`
-	UserID       string `json:"user_id"`
-	AssignmentID string `json:"assignment_id"`
-	Code         string `json:"code"`
-	Language     string `json:"language"`
+	ID         string `json:"id"`
+	UserID     string `json:"user_id"`
+	QuestionID string `json:"question_id"`
+	Code       string `json:"code"`
+	Language   string `json:"language"`
 	// pending | running | passed | failed
 	Status    sql.NullString `json:"status"`
 	RuntimeMs sql.NullInt32  `json:"runtime_ms"`
@@ -43,7 +75,7 @@ type Submission struct {
 
 type TestCase struct {
 	ID             string       `json:"id"`
-	AssignmentID   string       `json:"assignment_id"`
+	QuestionID     string       `json:"question_id"`
 	Input          string       `json:"input"`
 	ExpectedOutput string       `json:"expected_output"`
 	IsHidden       sql.NullBool `json:"is_hidden"`

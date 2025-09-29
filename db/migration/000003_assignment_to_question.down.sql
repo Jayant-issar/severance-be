@@ -17,6 +17,9 @@ ALTER TABLE "questions" DROP COLUMN IF EXISTS "updated_at";
 
 -- 2️⃣ Rename questions → assignments
 ALTER TABLE "questions" RENAME TO "assignments";
+-- Rename columns back in dependent tables
+ALTER TABLE "test_cases" RENAME COLUMN "question_id" TO "assignment_id";
+ALTER TABLE "submissions" RENAME COLUMN "question_id" TO "assignment_id";
 
 -- 3️⃣ Drop new foreign keys
 ALTER TABLE IF EXISTS "test_cases" DROP CONSTRAINT IF EXISTS test_cases_assignment_id_fkey;

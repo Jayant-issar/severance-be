@@ -11,25 +11,25 @@ import (
 )
 
 const createSubmission = `-- name: CreateSubmission :one
-insert into submissions (id, user_id, assignment_id, code, language, status, runtime_ms, memory_kb) values ($1, $2, $3, $4, $5, $6, $7, $8) returning id, user_id, assignment_id, code, language, status, runtime_ms, memory_kb, created_at
+insert into submissions (id, user_id, question_id, code, language, status, runtime_ms, memory_kb) values ($1, $2, $3, $4, $5, $6, $7, $8) returning id, user_id, question_id, code, language, status, runtime_ms, memory_kb, created_at
 `
 
 type CreateSubmissionParams struct {
-	ID           string         `json:"id"`
-	UserID       string         `json:"user_id"`
-	AssignmentID string         `json:"assignment_id"`
-	Code         string         `json:"code"`
-	Language     string         `json:"language"`
-	Status       sql.NullString `json:"status"`
-	RuntimeMs    sql.NullInt32  `json:"runtime_ms"`
-	MemoryKb     sql.NullInt32  `json:"memory_kb"`
+	ID         string         `json:"id"`
+	UserID     string         `json:"user_id"`
+	QuestionID string         `json:"question_id"`
+	Code       string         `json:"code"`
+	Language   string         `json:"language"`
+	Status     sql.NullString `json:"status"`
+	RuntimeMs  sql.NullInt32  `json:"runtime_ms"`
+	MemoryKb   sql.NullInt32  `json:"memory_kb"`
 }
 
 func (q *Queries) CreateSubmission(ctx context.Context, arg CreateSubmissionParams) (Submission, error) {
 	row := q.db.QueryRowContext(ctx, createSubmission,
 		arg.ID,
 		arg.UserID,
-		arg.AssignmentID,
+		arg.QuestionID,
 		arg.Code,
 		arg.Language,
 		arg.Status,
@@ -40,7 +40,7 @@ func (q *Queries) CreateSubmission(ctx context.Context, arg CreateSubmissionPara
 	err := row.Scan(
 		&i.ID,
 		&i.UserID,
-		&i.AssignmentID,
+		&i.QuestionID,
 		&i.Code,
 		&i.Language,
 		&i.Status,
@@ -61,7 +61,7 @@ func (q *Queries) DeleteSubmission(ctx context.Context, id string) error {
 }
 
 const getSubmission = `-- name: GetSubmission :one
-select id, user_id, assignment_id, code, language, status, runtime_ms, memory_kb, created_at from submissions where id = $1
+select id, user_id, question_id, code, language, status, runtime_ms, memory_kb, created_at from submissions where id = $1
 `
 
 func (q *Queries) GetSubmission(ctx context.Context, id string) (Submission, error) {
@@ -70,7 +70,7 @@ func (q *Queries) GetSubmission(ctx context.Context, id string) (Submission, err
 	err := row.Scan(
 		&i.ID,
 		&i.UserID,
-		&i.AssignmentID,
+		&i.QuestionID,
 		&i.Code,
 		&i.Language,
 		&i.Status,
@@ -81,12 +81,12 @@ func (q *Queries) GetSubmission(ctx context.Context, id string) (Submission, err
 	return i, err
 }
 
-const getSubmissionsByAssignment = `-- name: GetSubmissionsByAssignment :many
-select id, user_id, assignment_id, code, language, status, runtime_ms, memory_kb, created_at from submissions where assignment_id = $1 order by created_at desc
+const getSubmissionsByQuestion = `-- name: GetSubmissionsByQuestion :many
+select id, user_id, question_id, code, language, status, runtime_ms, memory_kb, created_at from submissions where question_id = $1 order by created_at desc
 `
 
-func (q *Queries) GetSubmissionsByAssignment(ctx context.Context, assignmentID string) ([]Submission, error) {
-	rows, err := q.db.QueryContext(ctx, getSubmissionsByAssignment, assignmentID)
+func (q *Queries) GetSubmissionsByQuestion(ctx context.Context, questionID string) ([]Submission, error) {
+	rows, err := q.db.QueryContext(ctx, getSubmissionsByQuestion, questionID)
 	if err != nil {
 		return nil, err
 	}
@@ -97,7 +97,7 @@ func (q *Queries) GetSubmissionsByAssignment(ctx context.Context, assignmentID s
 		if err := rows.Scan(
 			&i.ID,
 			&i.UserID,
-			&i.AssignmentID,
+			&i.QuestionID,
 			&i.Code,
 			&i.Language,
 			&i.Status,
@@ -119,7 +119,7 @@ func (q *Queries) GetSubmissionsByAssignment(ctx context.Context, assignmentID s
 }
 
 const getSubmissionsByUser = `-- name: GetSubmissionsByUser :many
-select id, user_id, assignment_id, code, language, status, runtime_ms, memory_kb, created_at from submissions where user_id = $1 order by created_at desc
+select id, user_id, question_id, code, language, status, runtime_ms, memory_kb, created_at from submissions where user_id = $1 order by created_at desc
 `
 
 func (q *Queries) GetSubmissionsByUser(ctx context.Context, userID string) ([]Submission, error) {
@@ -134,7 +134,7 @@ func (q *Queries) GetSubmissionsByUser(ctx context.Context, userID string) ([]Su
 		if err := rows.Scan(
 			&i.ID,
 			&i.UserID,
-			&i.AssignmentID,
+			&i.QuestionID,
 			&i.Code,
 			&i.Language,
 			&i.Status,
@@ -156,7 +156,7 @@ func (q *Queries) GetSubmissionsByUser(ctx context.Context, userID string) ([]Su
 }
 
 const updateSubmission = `-- name: UpdateSubmission :one
-update submissions set status = $2, runtime_ms = $3, memory_kb = $4 where id = $1 returning id, user_id, assignment_id, code, language, status, runtime_ms, memory_kb, created_at
+update submissions set status = $2, runtime_ms = $3, memory_kb = $4 where id = $1 returning id, user_id, question_id, code, language, status, runtime_ms, memory_kb, created_at
 `
 
 type UpdateSubmissionParams struct {
@@ -177,7 +177,7 @@ func (q *Queries) UpdateSubmission(ctx context.Context, arg UpdateSubmissionPara
 	err := row.Scan(
 		&i.ID,
 		&i.UserID,
-		&i.AssignmentID,
+		&i.QuestionID,
 		&i.Code,
 		&i.Language,
 		&i.Status,

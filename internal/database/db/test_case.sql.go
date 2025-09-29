@@ -11,12 +11,12 @@ import (
 )
 
 const createTestCase = `-- name: CreateTestCase :one
-insert into test_cases (id, assignment_id, input, expected_output, is_hidden) values ($1, $2, $3, $4, $5) returning id, assignment_id, input, expected_output, is_hidden, created_at
+insert into test_cases (id, question_id, input, expected_output, is_hidden) values ($1, $2, $3, $4, $5) returning id, question_id, input, expected_output, is_hidden, created_at
 `
 
 type CreateTestCaseParams struct {
 	ID             string       `json:"id"`
-	AssignmentID   string       `json:"assignment_id"`
+	QuestionID     string       `json:"question_id"`
 	Input          string       `json:"input"`
 	ExpectedOutput string       `json:"expected_output"`
 	IsHidden       sql.NullBool `json:"is_hidden"`
@@ -25,7 +25,7 @@ type CreateTestCaseParams struct {
 func (q *Queries) CreateTestCase(ctx context.Context, arg CreateTestCaseParams) (TestCase, error) {
 	row := q.db.QueryRowContext(ctx, createTestCase,
 		arg.ID,
-		arg.AssignmentID,
+		arg.QuestionID,
 		arg.Input,
 		arg.ExpectedOutput,
 		arg.IsHidden,
@@ -33,7 +33,7 @@ func (q *Queries) CreateTestCase(ctx context.Context, arg CreateTestCaseParams) 
 	var i TestCase
 	err := row.Scan(
 		&i.ID,
-		&i.AssignmentID,
+		&i.QuestionID,
 		&i.Input,
 		&i.ExpectedOutput,
 		&i.IsHidden,
@@ -52,7 +52,7 @@ func (q *Queries) DeleteTestCase(ctx context.Context, id string) error {
 }
 
 const getTestCase = `-- name: GetTestCase :one
-select id, assignment_id, input, expected_output, is_hidden, created_at from test_cases where id = $1
+select id, question_id, input, expected_output, is_hidden, created_at from test_cases where id = $1
 `
 
 func (q *Queries) GetTestCase(ctx context.Context, id string) (TestCase, error) {
@@ -60,7 +60,7 @@ func (q *Queries) GetTestCase(ctx context.Context, id string) (TestCase, error) 
 	var i TestCase
 	err := row.Scan(
 		&i.ID,
-		&i.AssignmentID,
+		&i.QuestionID,
 		&i.Input,
 		&i.ExpectedOutput,
 		&i.IsHidden,
@@ -69,12 +69,12 @@ func (q *Queries) GetTestCase(ctx context.Context, id string) (TestCase, error) 
 	return i, err
 }
 
-const getTestCasesByAssignment = `-- name: GetTestCasesByAssignment :many
-select id, assignment_id, input, expected_output, is_hidden, created_at from test_cases where assignment_id = $1 order by created_at
+const getTestCasesByQuestion = `-- name: GetTestCasesByQuestion :many
+select id, question_id, input, expected_output, is_hidden, created_at from test_cases where question_id = $1 order by created_at
 `
 
-func (q *Queries) GetTestCasesByAssignment(ctx context.Context, assignmentID string) ([]TestCase, error) {
-	rows, err := q.db.QueryContext(ctx, getTestCasesByAssignment, assignmentID)
+func (q *Queries) GetTestCasesByQuestion(ctx context.Context, questionID string) ([]TestCase, error) {
+	rows, err := q.db.QueryContext(ctx, getTestCasesByQuestion, questionID)
 	if err != nil {
 		return nil, err
 	}
@@ -84,7 +84,7 @@ func (q *Queries) GetTestCasesByAssignment(ctx context.Context, assignmentID str
 		var i TestCase
 		if err := rows.Scan(
 			&i.ID,
-			&i.AssignmentID,
+			&i.QuestionID,
 			&i.Input,
 			&i.ExpectedOutput,
 			&i.IsHidden,
@@ -104,12 +104,12 @@ func (q *Queries) GetTestCasesByAssignment(ctx context.Context, assignmentID str
 }
 
 const updateTestCase = `-- name: UpdateTestCase :one
-update test_cases set assignment_id = $2, input = $3, expected_output = $4, is_hidden = $5 where id = $1 returning id, assignment_id, input, expected_output, is_hidden, created_at
+update test_cases set question_id = $2, input = $3, expected_output = $4, is_hidden = $5 where id = $1 returning id, question_id, input, expected_output, is_hidden, created_at
 `
 
 type UpdateTestCaseParams struct {
 	ID             string       `json:"id"`
-	AssignmentID   string       `json:"assignment_id"`
+	QuestionID     string       `json:"question_id"`
 	Input          string       `json:"input"`
 	ExpectedOutput string       `json:"expected_output"`
 	IsHidden       sql.NullBool `json:"is_hidden"`
@@ -118,7 +118,7 @@ type UpdateTestCaseParams struct {
 func (q *Queries) UpdateTestCase(ctx context.Context, arg UpdateTestCaseParams) (TestCase, error) {
 	row := q.db.QueryRowContext(ctx, updateTestCase,
 		arg.ID,
-		arg.AssignmentID,
+		arg.QuestionID,
 		arg.Input,
 		arg.ExpectedOutput,
 		arg.IsHidden,
@@ -126,7 +126,7 @@ func (q *Queries) UpdateTestCase(ctx context.Context, arg UpdateTestCaseParams) 
 	var i TestCase
 	err := row.Scan(
 		&i.ID,
-		&i.AssignmentID,
+		&i.QuestionID,
 		&i.Input,
 		&i.ExpectedOutput,
 		&i.IsHidden,

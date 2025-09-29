@@ -5,9 +5,13 @@ ALTER TABLE IF EXISTS "submissions" DROP CONSTRAINT IF EXISTS submissions_assign
 -- 2️⃣ Rename assignments → questions
 ALTER TABLE "assignments" RENAME TO "questions";
 
+-- Rename columns in dependent tables
+ALTER TABLE "test_cases" RENAME COLUMN "assignment_id" TO "question_id";
+ALTER TABLE "submissions" RENAME COLUMN "assignment_id" TO "question_id";
+
 -- 3️⃣ Update foreign key references to new questions table
-ALTER TABLE "test_cases" ADD FOREIGN KEY ("assignment_id") REFERENCES "questions" ("id");
-ALTER TABLE "submissions" ADD FOREIGN KEY ("assignment_id") REFERENCES "questions" ("id");
+ALTER TABLE "test_cases" ADD FOREIGN KEY ("question_id") REFERENCES "questions" ("id");
+ALTER TABLE "submissions" ADD FOREIGN KEY ("question_id") REFERENCES "questions" ("id");
 
 -- 4️⃣ Add updated_at column
 ALTER TABLE "questions" ADD COLUMN "updated_at" timestamp DEFAULT CURRENT_TIMESTAMP;

@@ -10,30 +10,30 @@ import (
 
 type Querier interface {
 	CreateAIReview(ctx context.Context, arg CreateAIReviewParams) (AiReview, error)
-	CreateAssignment(ctx context.Context, arg CreateAssignmentParams) (Assignment, error)
+	CreateQuestion(ctx context.Context, arg CreateQuestionParams) (Question, error)
 	CreateSubmission(ctx context.Context, arg CreateSubmissionParams) (Submission, error)
 	CreateTestCase(ctx context.Context, arg CreateTestCaseParams) (TestCase, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
 	DeleteAIReview(ctx context.Context, id string) error
-	DeleteAssignment(ctx context.Context, id string) error
+	DeleteQuestion(ctx context.Context, id string) error
 	DeleteSubmission(ctx context.Context, id string) error
 	DeleteTestCase(ctx context.Context, id string) error
 	DeleteUser(ctx context.Context, id string) error
 	GetAIReview(ctx context.Context, id string) (AiReview, error)
 	GetAIReviewsBySubmission(ctx context.Context, submissionID string) ([]AiReview, error)
-	GetAssignment(ctx context.Context, id string) (Assignment, error)
+	GetQuestion(ctx context.Context, id string) (Question, error)
 	GetSubmission(ctx context.Context, id string) (Submission, error)
-	GetSubmissionsByAssignment(ctx context.Context, assignmentID string) ([]Submission, error)
+	GetSubmissionsByQuestion(ctx context.Context, questionID string) ([]Submission, error)
 	GetSubmissionsByUser(ctx context.Context, userID string) ([]Submission, error)
 	GetTestCase(ctx context.Context, id string) (TestCase, error)
-	GetTestCasesByAssignment(ctx context.Context, assignmentID string) ([]TestCase, error)
+	GetTestCasesByQuestion(ctx context.Context, questionID string) ([]TestCase, error)
 	GetUser(ctx context.Context, username string) (User, error)
 	GetUserByEmail(ctx context.Context, email string) (User, error)
 	GetUserByID(ctx context.Context, id string) (User, error)
-	ListAssignments(ctx context.Context) ([]Assignment, error)
+	ListQuestions(ctx context.Context) ([]Question, error)
 	ListUsers(ctx context.Context) ([]User, error)
 	UpdateAIReview(ctx context.Context, arg UpdateAIReviewParams) (AiReview, error)
-	UpdateAssignment(ctx context.Context, arg UpdateAssignmentParams) (Assignment, error)
+	UpdateQuestion(ctx context.Context, arg UpdateQuestionParams) (Question, error)
 	UpdateSubmission(ctx context.Context, arg UpdateSubmissionParams) (Submission, error)
 	UpdateTestCase(ctx context.Context, arg UpdateTestCaseParams) (TestCase, error)
 	UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error)
