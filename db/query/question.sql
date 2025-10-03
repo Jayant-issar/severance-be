@@ -11,4 +11,4 @@ update questions set title = $2, description = $3, difficulty = $4, tags = $5 wh
 delete from questions where id = $1;
 
 -- name: ListQuestions :many
-select * from questions order by created_at desc;
+select * from questions order by created_at desc limit $1 offset $2;

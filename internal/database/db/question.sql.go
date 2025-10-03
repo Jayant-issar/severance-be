@@ -72,11 +72,16 @@ func (q *Queries) GetQuestion(ctx context.Context, id string) (Question, error) 
 }
 
 const listQuestions = `-- name: ListQuestions :many
-select id, title, description, difficulty, tags, created_at, updated_at from questions order by created_at desc
+select id, title, description, difficulty, tags, created_at, updated_at from questions order by created_at desc limit $1 offset $2
 `
 
-func (q *Queries) ListQuestions(ctx context.Context) ([]Question, error) {
-	rows, err := q.db.QueryContext(ctx, listQuestions)
+type ListQuestionsParams struct {
+	Limit  int32 `json:"limit"`
+	Offset int32 `json:"offset"`
+}
+
+func (q *Queries) ListQuestions(ctx context.Context, arg ListQuestionsParams) ([]Question, error) {
+	rows, err := q.db.QueryContext(ctx, listQuestions, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}

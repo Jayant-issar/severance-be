@@ -30,7 +30,7 @@ type Querier interface {
 	GetUser(ctx context.Context, username string) (User, error)
 	GetUserByEmail(ctx context.Context, email string) (User, error)
 	GetUserByID(ctx context.Context, id string) (User, error)
-	ListQuestions(ctx context.Context) ([]Question, error)
+	ListQuestions(ctx context.Context, arg ListQuestionsParams) ([]Question, error)
 	ListUsers(ctx context.Context) ([]User, error)
 	UpdateAIReview(ctx context.Context, arg UpdateAIReviewParams) (AiReview, error)
 	UpdateQuestion(ctx context.Context, arg UpdateQuestionParams) (Question, error)

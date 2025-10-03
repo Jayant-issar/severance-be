@@ -23,3 +23,12 @@ func HandleValidationError(ctx *gin.Context, err error) {
 	}
 	ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 }
+
+// BindJSON binds JSON to the given object and handles validation errors
+func BindJSON(ctx *gin.Context, obj interface{}) error {
+	if err := ctx.ShouldBindJSON(obj); err != nil {
+		HandleValidationError(ctx, err)
+		return err
+	}
+	return nil
+}
