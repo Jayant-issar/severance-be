@@ -46,6 +46,12 @@ migrateup1:
 migratedown1:
 	migrate -path db/migration -database "$(DB_URL)" down 1
 
+gotoversion:
+	migrate -path db/migration -database "$(DB_URL)" goto $(VERSION)
+
+newmigration:
+	migrate create -ext sql -dir db/migration -seq $(MIGRATION_NAME)
+
 # ====================================================================================
 # CODE GENERATION & TESTING
 # ====================================================================================
@@ -80,4 +86,4 @@ install-tools:
 
 
 # .PHONY ensures that make doesn't confuse these targets with actual files.
-.PHONY: postgres createdb dropdb migrateup migratedown migrateversion migrateup1 migratedown1 sqlc test server install-tools
+.PHONY: postgres createdb dropdb migrateup migratedown migrateversion migrateup1 migratedown1 newmigration gotoversion sqlc test server install-tools

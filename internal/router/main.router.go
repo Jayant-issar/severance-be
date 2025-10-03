@@ -20,5 +20,10 @@ func (s *Server) setupRoutes(router *gin.Engine) {
 
 		//set up auth routes
 		authRouter(v1.Group("/auth"), &s.handler)
+
+		//setup question routes
+		questionGroup := v1.Group("/questions")
+		questionGroup.Use(middleware.AuthMiddleware())
+		questionsRouter(questionGroup, &s.handler)
 	}
 }
